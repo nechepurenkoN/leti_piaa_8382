@@ -1,18 +1,23 @@
-#include <bits/stdc++.h>
+#include <utility>
+#include <vector>
+#include <chrono>
+#include <stack>
+#include <tuple>
+#include <iostream>
 using namespace std;
 
 typedef tuple<int, int, int> luPoint; // Тип для хранения верхнего левого угла (y, x, size)
-
+char DBGLOG = 1;
 bool noIntersections(const luPoint& lu1, const luPoint& lu2){
     //Проверяем, пересекаются ли два квадрата, заданные двумя точками.
-    auto [y1, x1, n1] = lu1;
-    auto [y2, x2, n2] = lu2;
-    //  int y1 = std::get<0>(lu1);
-    //  int x1 = std::get<1>(lu1);
-    //  int n1 = std::get<2>(lu1);
-    //  int y2 = std::get<0>(lu2); // for stepik
-    //  int x2 = std::get<1>(lu2);
-    //  int n2 = std::get<2>(lu2);
+    //auto [y1, x1, n1] = lu1;
+    //auto [y2, x2, n2] = lu2;
+    int y1 = std::get<0>(lu1);
+    int x1 = std::get<1>(lu1);
+    int n1 = std::get<2>(lu1);
+    int y2 = std::get<0>(lu2); // for stepik
+    int x2 = std::get<1>(lu2);
+    int n2 = std::get<2>(lu2);
     if (x1 == x2 && y1 == y2) return false;
     if (x1 == x2) {
         return (y1 > y2) ? \
@@ -128,10 +133,10 @@ int main(){
 
     int currentSquare = 0;
     for (auto element : currentSolution){
-        auto [y, x, size] = element;
-        // int y = std::get<0>(element);
-        // int x = std::get<1>(element); // for stepik
-        // int size = std::get<2>(element);
+        //auto [y, x, size] = element;
+        int y = std::get<0>(element);
+        int x = std::get<1>(element); // for stepik
+        int size = std::get<2>(element);
         currentSquare += size*size;
     }
     
@@ -142,10 +147,10 @@ int main(){
         do {
 
             tuple<int,int,int> stack_top = rStack.top();
-            auto [cursz, visited, itsz] = stack_top;
-            //  int cursz = std::get<0>(stack_top);
-            //  int visited = std::get<1>(stack_top); // for stepik
-            //  int itsz = std::get<2>(stack_top);
+            //auto [cursz, visited, itsz] = stack_top;
+            int cursz = std::get<0>(stack_top);
+            int visited = std::get<1>(stack_top); // for stepik
+            int itsz = std::get<2>(stack_top);
             if ((int)currentSolution.size() == maxCount && n*n - currentSquare > cursz*cursz) {
                 // Если неполное решение уже нелучшее
                 rStack.pop();
@@ -158,7 +163,10 @@ int main(){
                         if (i + cursz <= n && j + cursz <= n && pass(currentSolution, {i, j, cursz})){
                             // Квадрат кандидат помещается
                             currentSolution.push_back({i, j, cursz});
-                            log(currentSolution, n);
+                            if (DBGLOG == 1){
+                                cout << "Place " << i << "," << j << "," << cursz << endl;
+                                log(currentSolution, n);
+                            }
                             visited = 1; // Если в этой итерации уже ставили, то больше не ставим
                             currentSquare += cursz*cursz;
                             rStack.pop();
@@ -183,11 +191,18 @@ int main(){
                 // Нашли решение
                 maxCount = (int) currentSolution.size();
                 answer = currentSolution;
+                if (DBGLOG == 1) {
+                    cout << "Find a better solution:" << endl;
+                    log(currentSolution, n);
+                }
                 auto point = currentSolution.back();
                 auto topPointSize = std::get<2>(point);
                 currentSquare -= topPointSize * topPointSize;
                 currentSolution.pop_back();
-                log(currentSolution, n);
+                if (DBGLOG == 1) {
+                    cout << "Drop " << std::get<0>(point) << "," << std::get<1>(point) << "," << std::get<2>(point) << endl;
+                    log(currentSolution, n);
+                }
                 rStack.pop();
                 continue;
             }
@@ -198,7 +213,10 @@ int main(){
                 auto topPointSize = std::get<2>(point);
                 currentSquare -= topPointSize * topPointSize;
                 currentSolution.pop_back();
-                log(currentSolution, n);
+                if (DBGLOG == 1) {
+                    cout << "Drop " << std::get<0>(point) << "," << std::get<1>(point) << "," << std::get<2>(point) << endl;
+                    log(currentSolution, n);
+                }
                 rStack.pop();
                 continue;
             }
@@ -223,20 +241,23 @@ int main(){
             auto topPointSize = std::get<2>(point);
             currentSquare -= topPointSize * topPointSize;
             currentSolution.pop_back();
-            log(currentSolution, n);
+            if (DBGLOG == 1){
+                log(currentSolution, n);
+                cout << "Drop " << std::get<0>(point) << "," << std::get<1>(point) << "," << std::get<2>(point) << endl;
+            }
         } while (!rStack.empty());
     }
 
     // Выводим ответ
     cout << (int) answer.size() << endl;
     for (auto element : answer) {
-        auto [y, x, size] = element;
-        // int y = std::get<0>(element);
-        // int x = std::get<1>(element); // for stepik
-        // int size = std::get<2>(element);
+        //auto [y, x, size] = element;
+        int y = std::get<0>(element);
+        int x = std::get<1>(element); // for stepik
+        int size = std::get<2>(element);
         cout << scalar*y + 1 << " " << scalar*x + 1 << " " << scalar*size << endl;
     }
     auto end = chrono::steady_clock::now();
-    cout << chrono::duration_cast<chrono::milliseconds>(end - start).count() << "ms";
+    cout << chrono::duration_cast<chrono::milliseconds>(end - start).count() << "ms" << endl;
     return 0;
 }
