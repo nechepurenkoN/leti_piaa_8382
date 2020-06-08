@@ -24,16 +24,17 @@ int main(){
             k++;
         prefixFunction[i] = k;
     }
+    std::cout << "Prefix function for merged string is:" << std::endl;
+    for (auto el : prefixFunction) {
+        std::cout << el << " ";
+    }std::cout << std::endl;
     for (int i = needleSize; i < expLen; i++){
         if (prefixFunction[i] == needleSize){
-            std::cout << i - needleSize - haystackSize << std::endl;
+            std::cout << "Rotated on: " << i - needleSize - haystackSize << std::endl;
             return 0;
         }
     }
-    /*for (auto el : prefixFunction) {
-        std::cout << el << " ";
-    }std::cout << std::endl;*/
-    std::cout << -1 << std::endl;
+    std::cout << "No rotation: " << -1 << std::endl;
 
     return 0;
 }
