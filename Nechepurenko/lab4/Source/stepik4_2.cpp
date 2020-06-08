@@ -16,14 +16,22 @@ int main(){
     std::vector<int> prefixFunction(expLen, 0);
     for (int i = 1; i < expLen; i++){
         int idx = (i >= needleSize + 1 + haystackSize) ? i - haystackSize : i;
+        std::cout << "Build for pi function for " << i << " index, " << str[idx] << " symbol\n";
         int k = prefixFunction[i-1];
+        std::cout << "Candidate is: " << k << std::endl;
         while (k > 0 && str[k] != str[idx]){
+            std::cout << str[idx] << " != " << str[k] << ", at pos " << k << ", next candidate is: ";
             k = prefixFunction[k-1];
+            std::cout << k << std::endl;
         }
-        if (str[idx] == str[k])
+        if (str[idx] == str[k]) {
+            std::cout << str[idx] << " == " << str[k] << ", at pos " << k << ", increase value\n"; 
             k++;
+        }
         prefixFunction[i] = k;
+        std::cout << "Got prefixFunction[" << i << "] = " << k << std::endl;
     }
+
     std::cout << "Prefix function for merged string is:" << std::endl;
     for (auto el : prefixFunction) {
         std::cout << el << " ";

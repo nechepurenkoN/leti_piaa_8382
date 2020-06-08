@@ -12,13 +12,20 @@ int main(){
     int needleSize = (int) needle.size();
     std::vector<int> prefixFunction(needleSize, 0);
     for (int i = 1; i < needleSize; i++){
+        std::cout << "Build for pi function for " << i << " index, " << needle[i] << " symbol\n";
         int k = prefixFunction[i-1];
+        std::cout << "Candidate is: " << k << std::endl;
         while (k > 0 && needle[k] != needle[i]){
+            std::cout << needle[i] << " != " << needle[k] << ", at pos " << k << ", next candidate is: ";
             k = prefixFunction[k-1];
+            std::cout << k << std::endl;
         }
-        if (needle[i] == needle[k])
+        if (needle[i] == needle[k]) {
+            std::cout << needle[i] << " == " << needle[k] << ", at pos " << k << ", increase value\n"; 
             k++;
+        }
         prefixFunction[i] = k;
+        std::cout << "Got prefixFunction[" << i << "] = " << k << std::endl;
     }
 
     /*
@@ -29,9 +36,6 @@ int main(){
         std::cout << value << " ";
     } std::cout << std::endl;
 
-    //std::cout << "Input length of string cmp search in:" << std::endl;
-    //int haystackSize = 0;
-    //std::cin >> haystackSize;
     std::cout << "Input string:" << std::endl;
 
     /*
